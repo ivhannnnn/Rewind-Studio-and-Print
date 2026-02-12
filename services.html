@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Our Services - Rewind Studio and Prints</title>
+    <link rel="stylesheet" href="services.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">
+        <img src="385319258_714193217393851_8500146797645932462_n (1).jpg" alt="Logo">
+        <span>Rewind Studio and Prints</span>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="services.php">Services</a>
+        <a href="#">About</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<!-- SERVICES SECTION -->
+<section class="services">
+
+    <div class="card">
+        <h3>Wedding</h3>
+        <p>Capture your special day with timeless photography and cinematic coverage tailored for your dream wedding.</p>
+        <h4>Starting at</h4>
+        <a href="book.php?service=Wedding" class="btn">Book Appointment</a>
+    </div>
+
+    <div class="card">
+        <h3>Debut</h3>
+        <p>Celebrate your 18th birthday with elegant portraits and full event coverage to preserve every magical moment.</p>
+        <h4>Starting at</h4>
+        <a href="book.php?service=Debut" class="btn">Book Appointment</a>
+    </div>
+
+    <div class="card">
+        <h3>Graduation</h3>
+        <p>Professional graduation photoshoots and event coverage to celebrate your academic achievement.</p>
+        <h4>Starting at</h4>
+        <a href="book.php?service=Graduation" class="btn">Book Appointment</a>
+    </div>
+
+    <div class="card">
+        <h3>Pre-Birthday</h3>
+        <p>Creative themed pre-birthday photoshoots designed to highlight your personality and style.</p>
+        <h4>Starting at</h4>
+        <a href="book.php?service=Pre-Birthday" class="btn">Book Appointment</a>
+    </div>
+
+    <div class="card">
+        <h3>Prenup</h3>
+        <p>Romantic and cinematic pre-nuptial shoots that beautifully tell your love story.</p>
+        <h4>Starting at</h4>
+        <a href="book.php?service=Prenup" class="btn">Book Appointment</a>
+    </div>
+
+</section>
+
+<script>
+function checkLogin(event) {
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+    if (!isLoggedIn) {
+        event.preventDefault();
+        alert("You need to log in first!");
+        window.location.href = "login.html";
+    }
+}
+
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', checkLogin);
+});
+</script>
+
+</body>
+</html>

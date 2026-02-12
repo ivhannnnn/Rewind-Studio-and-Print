@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rewind Studio | Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="card-container">
+    <div class="card">
+
+        <!-- LOGIN SIDE -->
+<div class="front">
+    <h1>Rewind Studio</h1>
+    <p class="subtitle">Photography & Prints</p>
+
+    <form>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" placeholder="Enter username" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <!-- Back to Home Button -->
+    <div class="home-btn-container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+    </div>
+
+    <div class="create-account">
+        <p>Don’t have an account?</p>
+        <a href="#" onclick="flipCard()">Create an account</a>
+    </div>
+</div>
+
+<!-- SIGN UP SIDE -->
+<div class="back">
+    <h1>Create Account</h1>
+    <p class="subtitle">Join Rewind Studio</p>
+
+    <form>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter full name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="Enter email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="Create password" required>
+        </div>
+
+        <button type="submit" class="login-btn">Sign Up</button>
+    </form>
+
+    <!-- Back to Home Button -->
+    <div class="home-btn-container">
+        <a href="index.html" class="home-btn">Back to Home</a>
+    </div>
+
+    <div class="create-account">
+        <p>Already have an account?</p>
+        <a href="#" onclick="flipCard()">Back to Login</a>
+    </div>
+</div>
+
+
+    </div>
+</div>
+
+<script>
+function flipCard() {
+    document.querySelector(".card").classList.toggle("flip");
+}
+</script>
+
+</body>
+</html>
