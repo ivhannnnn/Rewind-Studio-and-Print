@@ -1,0 +1,124 @@
+/* ================= GLOBAL ================= */
+body {
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+        url("486603552_1072841941528975_1520142067500954297_n.jpg");
+    background-size: cover;
+    background-position: center;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    margin: 0;
+}
+
+/* ================= HEADER ================= */
+header {
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+header .logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+/* ================= HEADER NAVIGATION ================= */
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 30px;
+    font-weight: 500;
+    position: relative;
+    transition: 0.3s ease;
+}
+
+/* Underline hover effect (same as dashboard) */
+nav a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -6px;
+    background: #fff;
+    transition: 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+.welcome-container h2 {
+    font-size: 18px;
+    margin-right: 20px;
+}
+
+/* ================= HERO SECTION ================= */
+section.hero {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ================= BOOKING CARDS ================= */
+.booking-container {
+    width: 100%;
+    max-width: 900px;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.12);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    margin-top: 30px;
+}
+
+.booking-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.booking-card {
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.booking-card p {
+    margin: 5px 10px;
+    flex: 1 1 120px;
+}
+
+.status {
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.status.Pending { background: rgba(255,165,0,0.3); color: #ffa500; }
+.status.Confirmed { background: rgba(0,255,0,0.2); color: #0f0; }
+.status.Completed { background: rgba(0,200,255,0.2); color: #0ff; }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    header { flex-direction: column; gap: 15px; }
+    .booking-card { flex-direction: column; text-align: center; }
+}

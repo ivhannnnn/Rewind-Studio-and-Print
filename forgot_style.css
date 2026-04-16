@@ -1,0 +1,89 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+        url("486603552_1072841941528975_1520142067500954297_n.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glassy container */
+.forgot-container {
+    width: 380px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    text-align: center;
+}
+
+.forgot-container h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #fff;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.forgot-container input[type="email"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    backdrop-filter: blur(5px);
+}
+
+.forgot-container input::placeholder {
+    color: #eee;
+}
+
+.forgot-container button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.forgot-container button:hover {
+    background: rgba(255,255,255,0.4);
+}
+
+.forgot-container .message {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .forgot-container {
+        width: 90%;
+        padding: 30px 20px;
+    }
+}
