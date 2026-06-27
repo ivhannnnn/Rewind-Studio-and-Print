@@ -33,6 +33,44 @@ $current = basename($_SERVER['PHP_SELF']);
     <title>Booking Status — Rewind Studio</title>
     <link rel="stylesheet" href="booking_status_v11.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .btn-pay {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: linear-gradient(135deg, #00c2ff, #0070cc);
+            color: #fff;
+            font-weight: 700;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: .95rem;
+            transition: opacity .2s;
+        }
+        .btn-pay:hover { opacity: .85; }
+
+        .payment-pending-notice {
+            text-align: center;
+            padding: 11px;
+            background: rgba(251,191,36,.1);
+            border: 1px solid rgba(251,191,36,.35);
+            border-radius: 10px;
+            color: #fbbf24;
+            font-size: .88rem;
+            margin-bottom: 10px;
+        }
+
+        .payment-paid-notice {
+            text-align: center;
+            padding: 11px;
+            background: rgba(74,222,128,.1);
+            border: 1px solid rgba(74,222,128,.35);
+            border-radius: 10px;
+            color: #4ade80;
+            font-size: .88rem;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -97,6 +135,31 @@ $current = basename($_SERVER['PHP_SELF']);
                     <?= htmlspecialchars($row['payment_status']); ?>
                 </span>
             </div>
+
+            <!-- ── DOWN PAYMENT SECTION ────────────────────────────── -->
+            <?php if ($status === 'approved' && $payment === 'unpaid'): ?>
+
+                <a href="payment.php?booking_id=<?= (int)$row['id']; ?>" class="btn-pay">
+                    <i class="fas fa-credit-card" style="margin-right:6px;"></i>
+                    Pay Down Payment (30%)
+                </a>
+
+            <?php elseif ($status === 'approved' && $payment === 'pending verification'): ?>
+
+                <div class="payment-pending-notice">
+                    <i class="fas fa-hourglass-half" style="margin-right:6px;"></i>
+                    Receipt submitted — waiting for admin to verify your payment
+                </div>
+
+            <?php elseif ($payment === 'paid'): ?>
+
+                <div class="payment-paid-notice">
+                    <i class="fas fa-circle-check" style="margin-right:6px;"></i>
+                    Down payment verified! Your booking is confirmed.
+                </div>
+
+            <?php endif; ?>
+            <!-- ── END DOWN PAYMENT SECTION ───────────────────────── -->
 
             <!-- Review -->
             <div class="rating-box">

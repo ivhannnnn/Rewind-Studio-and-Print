@@ -88,7 +88,7 @@ function csrf_fields(int $id, string $action): string {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookings — Rewind Admin</title>
-    <link rel="stylesheet" href="admin_dashboardv3.css">
+    <link rel="stylesheet" href="admin_dashboardv4.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -295,7 +295,7 @@ function csrf_fields(int $id, string $action): string {
                             <?php elseif ($pstatus === 'pending verification'): ?>
 
                                 <a class="btn verify"
-                                   href="verify_payment.php?id=<?= $id ?>">
+                                   href="admin_payments.php?id=<?= $id ?>">
                                     <i class="fas fa-magnifying-glass-dollar" aria-hidden="true"></i>
                                     Verify Payment
                                 </a>

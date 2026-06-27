@@ -224,7 +224,7 @@ section.hero {
 .booking-card {
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     gap: 20px;
     padding: 28px 32px;
     margin-bottom: 20px;
@@ -309,10 +309,83 @@ section.hero {
 .payment-unknown               { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); color: var(--muted); }
 
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DOWN PAYMENT SECTION
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Pay button — spans full width, sits between badges and review box */
+.btn-pay {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, #00c2ff, #0070cc);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border: none;
+    box-shadow: 0 6px 24px rgba(0, 194, 255, 0.25);
+    transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+}
+
+.btn-pay:hover {
+    opacity: 0.88;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0, 194, 255, 0.38);
+}
+
+/* Pulse animation to draw attention */
+@keyframes payPulse {
+    0%, 100% { box-shadow: 0 6px 24px rgba(0, 194, 255, 0.25); }
+    50%       { box-shadow: 0 6px 32px rgba(0, 194, 255, 0.55); }
+}
+.btn-pay { animation: payPulse 2.5s ease-in-out infinite; }
+.btn-pay:hover { animation: none; }
+
+
+/* Pending verification notice */
+.payment-pending-notice {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 18px;
+    border-radius: var(--radius-md);
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.30);
+    color: #fbbf24;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+/* Paid / confirmed notice */
+.payment-paid-notice {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 18px;
+    border-radius: var(--radius-md);
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.30);
+    color: #4ade80;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+
 /* ── Rating / review box ─────────────────────────────────────────────────── */
 .rating-box {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
     padding: 18px 20px;
     border-radius: var(--radius-md);
     background: rgba(255,255,255,0.05);
@@ -374,7 +447,7 @@ section.hero {
 /* ── Message admin form ──────────────────────────────────────────────────── */
 .msg-form {
     grid-column: 1 / -1;
-    grid-row: 3;
+    grid-row: 4;
     display: flex;
     justify-content: flex-end;
 }
@@ -440,6 +513,11 @@ section.hero {
         flex-direction: row;
         align-items: flex-start;
         flex-wrap: wrap;
+    }
+
+    .btn-pay {
+        font-size: 0.9rem;
+        padding: 13px 16px;
     }
 
     .msg-form { justify-content: stretch; }
