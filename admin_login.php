@@ -40,7 +40,7 @@ if(isset($_POST['login'])){
 <head>
     <meta charset="UTF-8">
     <title>Admin Login - Rewind Studio</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="adminv2.css">
 </head>
 <body>
 <section class="hero">

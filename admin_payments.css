@@ -1,0 +1,191 @@
+/* ================= RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI;
+}
+
+body{
+    min-height:100vh;
+    background:
+        linear-gradient(120deg, rgba(0,0,0,0.85), rgba(10,10,10,0.95)),
+        url("486603552_1072841941528975_1520142067500954297_n.jpg");
+    background-size:cover;
+    background-position:center;
+    color:#fff;
+}
+
+/* ================= LAYOUT ================= */
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+    width:260px;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(20px);
+    border-right:1px solid rgba(255,255,255,0.12);
+    padding:20px;
+}
+
+.brand{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.brand img{
+    width:60px;
+    height:60px;
+    border-radius:12px;
+}
+
+.brand h2{
+    font-size:18px;
+    margin-top:10px;
+}
+
+.brand span{
+    font-size:12px;
+    opacity:0.7;
+}
+
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.sidebar nav a{
+    color:#fff;
+    text-decoration:none;
+    padding:12px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.05);
+    transition:0.3s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active{
+    background:rgba(255,255,255,0.15);
+    transform:translateX(5px);
+}
+
+/* ================= MAIN ================= */
+.main{
+    flex:1;
+    padding:30px;
+}
+
+/* ================= TOPBAR ================= */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+/* ================= PAYMENT GRID ================= */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:15px;
+}
+
+/* ================= PAYMENT CARD ================= */
+.glass-card{
+    padding:18px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(15px);
+    transition:0.3s;
+}
+
+.glass-card:hover{
+    transform:translateY(-5px);
+}
+
+.glass-card h3{
+    font-size:14px;
+    opacity:0.7;
+}
+
+.glass-card p{
+    font-size:14px;
+    margin-top:6px;
+}
+
+/* ================= RECEIPT IMAGE ================= */
+.glass-card img{
+    margin-top:10px;
+    width:100%;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.15);
+}
+
+/* ================= STATUS TEXT ================= */
+.status{
+    margin-top:8px;
+    padding:6px 10px;
+    display:inline-block;
+    border-radius:8px;
+    font-size:12px;
+    background:rgba(255,255,255,0.08);
+}
+
+.status.Unpaid{
+    color:#ff6b6b;
+}
+
+
+.status.pending-verification{
+    color:#ffd166;
+}
+
+.status.Paid{
+    color:#4ade80;
+}
+
+/* ================= ACTIONS ================= */
+.glass-card form{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+
+/* ================= BUTTONS ================= */
+button{
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+    transition:0.3s;
+    color:#fff;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+/* APPROVE */
+button[name="approve"]{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+/* REJECT */
+button[name="reject"]{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+/* ================= EMPTY STATE ================= */
+.empty{
+    text-align:center;
+    opacity:0.6;
+    padding:20px;
+}

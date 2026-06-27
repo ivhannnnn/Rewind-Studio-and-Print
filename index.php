@@ -1,90 +1,135 @@
 <?php
 session_start();
+include("db.php");
 
-// If user is already logged in, redirect to dashboard
-if(isset($_SESSION['user'])){
+// ── Already logged in → go to dashboard ──────────────────────────────────────
+if (isset($_SESSION['user'])) {
     header("Location: dashboard.php");
     exit();
 }
+
+// ── Reviews query (limit to 6, with error handling) ──────────────────────────
+$reviews     = null;
+$reviewCount = 0;
+
+$reviewQuery = mysqli_query($conn, "
+    SELECT
+        r.rating,
+        r.feedback,
+        u.full_name,
+        b.service_name,
+        r.created_at
+    FROM reviews r
+    INNER JOIN bookings b ON r.booking_id = b.id
+    INNER JOIN users  u ON b.user_id    = u.id
+    ORDER BY r.created_at DESC
+    LIMIT 6
+");
+
+if (!$reviewQuery) {
+    error_log("Reviews query failed: " . mysqli_error($conn));
+} else {
+    $reviews     = $reviewQuery;
+    $reviewCount = mysqli_num_rows($reviewQuery);
+}
+
+$current = basename($_SERVER['PHP_SELF']);
 ?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rewind Studio and Prints</title>
-    <link rel="stylesheet" href="style_v2.css">
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <link rel="stylesheet" href="style_v4.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-
-<!-- ================= NAVIGATION ================= -->
+<!-- ═══════════════════════════ HEADER ═══════════════════════════════════════ -->
 <header>
     <div class="logo">
-        <img src="385319258_714193217393851_8500146797645932462_n (1).jpg" alt="Logo">
+        <img src="385319258_714193217393851_8500146797645932462_n (1).jpg"
+             alt="Rewind Studio and Prints Logo">
         <span>Rewind Studio and Prints</span>
     </div>
 
-    <nav>
-        <a href="index.php">Home</a>
-        <a href="services.php">Services</a>
-
-
-    
-
-        
-            <a href="login.php">Login</a>
-        
+    <nav aria-label="Main navigation">
+        <a href="index.php"
+           class="<?= $current === 'index.php' ? 'active' : '' ?>"
+           aria-current="<?= $current === 'index.php' ? 'page' : 'false' ?>">
+            Home
+        </a>
+        <a href="services.php"
+           class="<?= $current === 'services.php' ? 'active' : '' ?>"
+           aria-current="<?= $current === 'services.php' ? 'page' : 'false' ?>">
+            Services
+        </a>
+        <a href="login.php"
+           class="<?= $current === 'login.php' ? 'active' : '' ?>"
+           aria-current="<?= $current === 'login.php' ? 'page' : 'false' ?>">
+            Login
+        </a>
     </nav>
 </header>
 
-<!-- ================= HERO SECTION ================= -->
+<!-- ═══════════════════════════ LOGOUT TOAST (if redirected after logout) ════ -->
+<?php if (isset($_GET['logged_out']) && $_GET['logged_out'] === '1'): ?>
+    <div class="logout-toast" id="logout-message">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        You have been logged out successfully.
+    </div>
+<?php endif; ?>
+
+<!-- ═══════════════════════════ HERO ═════════════════════════════════════════ -->
 <section class="hero">
     <div class="hero-container">
+
         <div class="hero-content">
-            <h1>Your Memories. <br> Printed to Perfection.</h1>
+            <h1>Your Memories.<br>Printed to Perfection.</h1>
             <p>
-                Welcome to Rewind Studio and Print — where we turn your favorite moments 
-                into high-quality prints. Photo printing, tarpaulins, invitations, 
-                and customized designs made with care and creativity.
+                Welcome to Rewind Studio and Prints — where we turn your favourite moments
+                into high-quality prints. Photo printing, tarpaulins, invitations,
+                and customised designs made with care and creativity.
             </p>
-            <a href="services.php" class="hero-btn">Explore Services</a>
+            <div class="hero-actions">
+                <a href="services.php" class="hero-btn">Explore Services</a>
+                <a href="login.php"    class="hero-btn hero-btn--outline">Book Now</a>
+            </div>
         </div>
 
         <div class="hero-image">
-            <img src="logo.jpg" alt="Rewind Studio Prints">
+            <img src="logo.jpg" alt="Rewind Studio and Prints showcase">
         </div>
+
     </div>
 </section>
 
-<!-- ================= SAMPLE WORKS ================= -->
+<!-- ═══════════════════════════ SAMPLE WORKS ════════════════════════════════ -->
 <section class="portfolio">
     <h2 class="section-title">Our Sample Works</h2>
 
     <div class="portfolio-container">
 
         <div class="portfolio-item">
-            <img src="wed.png" alt="Wedding Shoot">
+            <img src="wed.png" alt="Wedding photography sample by Rewind Studio">
             <div class="portfolio-text">
                 <h3>Wedding Photography</h3>
                 <p>
-                    Timeless and cinematic wedding coverage that captures 
-                    every emotional and beautiful moment of your special day.
+                    Timeless and cinematic wedding coverage that captures every emotional
+                    and beautiful moment of your special day.
                 </p>
             </div>
         </div>
 
         <div class="portfolio-item">
-            <img src="new.png" alt="Studio Shoot">
+            <img src="new.png" alt="Studio and event coverage sample by Rewind Studio">
             <div class="portfolio-text">
-                <h3>Studio & Event Coverage</h3>
+                <h3>Studio &amp; Event Coverage</h3>
                 <p>
-                    High-quality portraits, debuts, graduations, and events 
-                    professionally captured and printed by Rewind Studio.
+                    High-quality portraits, debuts, graduations, and events professionally
+                    captured and printed by Rewind Studio.
                 </p>
             </div>
         </div>
@@ -92,38 +137,38 @@ if(isset($_SESSION['user'])){
     </div>
 </section>
 
-<!-- ================= WHY CHOOSE US ================= -->
+<!-- ═══════════════════════════ WHY CHOOSE US ════════════════════════════════ -->
 <section class="features">
     <h2 class="section-title">Why Choose Rewind Studio and Prints?</h2>
 
     <div class="features-grid">
 
         <div class="feature-card">
-            <div class="icon">📸</div>
+            <div class="icon" aria-hidden="true">📸</div>
             <h3>Professional Team</h3>
             <p>Experienced photographers and editors dedicated to capturing your best moments.</p>
         </div>
 
         <div class="feature-card">
-            <div class="icon">⏰</div>
+            <div class="icon" aria-hidden="true">⏰</div>
             <h3>Flexible Schedule</h3>
             <p>Book sessions at your most convenient time for events and photoshoots.</p>
         </div>
 
         <div class="feature-card">
-            <div class="icon">🖨️</div>
+            <div class="icon" aria-hidden="true">🖨️</div>
             <h3>High-Quality Prints</h3>
             <p>Sharp, vibrant prints using premium materials and modern printing technology.</p>
         </div>
 
         <div class="feature-card">
-            <div class="icon">💎</div>
+            <div class="icon" aria-hidden="true">💎</div>
             <h3>Modern Equipment</h3>
             <p>Professional cameras, lighting, and gear for crystal-clear results.</p>
         </div>
 
         <div class="feature-card">
-            <div class="icon">🎨</div>
+            <div class="icon" aria-hidden="true">🎨</div>
             <h3>Creative Editing</h3>
             <p>Stylish retouching and cinematic edits to make your photos stand out.</p>
         </div>
@@ -131,7 +176,67 @@ if(isset($_SESSION['user'])){
     </div>
 </section>
 
-<!-- ================= FOOTER ================= -->
+<!-- ═══════════════════════════ REVIEWS ══════════════════════════════════════ -->
+<section class="reviews-section">
+    <h2 class="section-title">What Our Customers Say</h2>
+
+    <div class="reviews-grid">
+
+        <?php if ($reviews && $reviewCount > 0): ?>
+
+            <?php while ($review = mysqli_fetch_assoc($reviews)): ?>
+                <div class="review-card">
+
+                    <!-- Star rating -->
+                    <div class="review-stars"
+                         aria-label="Rating: <?= (int)$review['rating'] ?> out of 5">
+                        <?php
+                        $rating = (int)$review['rating'];
+                        echo str_repeat('<i class="fas fa-star" aria-hidden="true"></i>', $rating);
+                        echo str_repeat('<i class="far fa-star" aria-hidden="true"></i>', 5 - $rating);
+                        ?>
+                    </div>
+
+                    <!-- Feedback -->
+                    <p class="review-feedback">
+                        "<?php echo htmlspecialchars($review['feedback'], ENT_QUOTES, 'UTF-8'); ?>"
+                    </p>
+
+                    <!-- Reviewer name -->
+                    <h4>— <?php echo htmlspecialchars($review['full_name'], ENT_QUOTES, 'UTF-8'); ?></h4>
+
+                    <!-- Service booked -->
+                    <p class="review-service">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                        <?php echo htmlspecialchars($review['service_name'], ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+
+                </div>
+            <?php endwhile; ?>
+
+        <?php else: ?>
+            <div class="review-empty">
+                <h3>No Reviews Yet</h3>
+                <p>Customer reviews will appear here after ratings are submitted.</p>
+            </div>
+        <?php endif; ?>
+
+    </div>
+</section>
+
+<!-- ═══════════════════════════ CTA BANNER ═══════════════════════════════════ -->
+<section class="cta-banner">
+    <div class="cta-content">
+        <h2>Ready to Book Your Session?</h2>
+        <p>Create an account or log in to reserve your preferred date.</p>
+        <div class="cta-actions">
+            <a href="login.php" class="hero-btn">Create Account</a>
+            <a href="login.php"    class="hero-btn hero-btn--outline">Log In</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════════════════ -->
 <footer class="footer">
     <div class="footer-container">
 
@@ -145,9 +250,13 @@ if(isset($_SESSION['user'])){
         <div class="footer-section center">
             <h2>Rewind Studio and Prints</h2>
             <p>Turning Your Moments Into Beautiful Prints.</p>
-
             <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.facebook.com/rewindstudioandprint"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Visit our Facebook page">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
             </div>
         </div>
 
@@ -160,21 +269,26 @@ if(isset($_SESSION['user'])){
     </div>
 
     <div class="footer-bottom">
-        <p>© 2026 Rewind Studio Prints. All Rights Reserved.</p>
+        <p>© <?php echo date('Y'); ?> Rewind Studio Prints. All Rights Reserved.</p>
     </div>
 </footer>
+
+<!-- ═══════════════════════════ SCRIPTS ══════════════════════════════════════ -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ── Auto-dismiss logout toast ──────────────────────────────────────────
     const msg = document.getElementById('logout-message');
-    if(msg){
+    if (msg) {
         setTimeout(() => {
-            msg.classList.add('hide'); // fade out
-            setTimeout(() => msg.remove(), 500); // remove from DOM after fade
-        }, 3000); // 3 seconds
+            msg.style.transition = 'opacity .5s ease';
+            msg.style.opacity    = '0';
+            setTimeout(() => msg.remove(), 500);
+        }, 3000);
     }
+
 });
 </script>
-
 
 </body>
 </html>

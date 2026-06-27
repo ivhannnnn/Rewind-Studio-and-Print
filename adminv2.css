@@ -1,157 +1,367 @@
-/* ================= GLOBAL ================= */
-body {
-    min-height: 100vh;
+/* =========================================
+   GLOBAL
+========================================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    color:#fff;
+
     background:
-        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-        url("486603552_1072841941528975_1520142067500954297_n.jpg");
-    background-size: cover;
-    background-position: center;
-    font-family: 'Segoe UI', sans-serif;
-    color: #fff;
-    margin: 0;
-}
-/* Admin dashboard logo */
-header .logo img {
-    width: 60px;   /* adjust width */
-    height: 60px;  /* adjust height */
-    object-fit: contain;
-}
-/* ================= HEADER ================= */
-header {
-    padding: 20px 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(5px);
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.75)),
+    url("486603552_1072841941528975_1520142067500954297_n.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+
+    display:flex;
+    flex-direction:column;
 }
 
-header .logo { font-size: 20px; font-weight: 600; }
+/* =========================================
+   HEADER (FIXED ALIGNMENT)
+========================================= */
+header{
+    width:100%;
 
-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 30px;
-    font-weight: 500;
-    position: relative;
-    transition: 0.3s ease;
-}
-nav a::after {
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    left: 0;
-    bottom: -6px;
-    background: #fff;
-    transition: 0.3s ease;
-}
-nav a:hover::after { width: 100%; }
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-/* ================= HERO/CONTAINER ================= */
-section.hero { padding: 80px 60px; display: flex; flex-direction: column; align-items: center; }
-.hero-container { width: 100%; max-width: 1000px; }
+    padding:18px 50px;
 
-/* ================= CARDS ================= */
-.card, .booking-card {
-    padding: 25px 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    background:rgba(255,255,255,0.10);
+    backdrop-filter:blur(18px);
+
+    border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-.card { text-align: center; font-weight: bold; }
-
-.booking-card p { margin: 5px 10px; flex: 1 1 120px; }
-
-.btn {
-    padding: 8px 18px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s ease;
+/* LOGO */
+header .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:18px;
+    font-weight:600;
 }
-.btn.approve { background: rgba(0,255,0,0.2); color:#0f0; }
-.btn.reject { background: rgba(255,0,0,0.2); color:#f00; }
 
-.status.Pending { background: rgba(255,165,0,0.3); color: #ffa500; }
-.status.Confirmed { background: rgba(0,255,0,0.2); color: #0f0; }
-.status.Rejected { background: rgba(255,0,0,0.2); color:#f00; }
+header .logo img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
 
-/* ================= RESPONSIVE ================= */
+/* NAV */
+nav{
+    display:flex;
+    align-items:center;
+    gap:25px; /* FIX: better spacing instead of margin-left */
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:500;
+    position:relative;
+    transition:0.3s ease;
+}
+
+nav a:hover{
+    color:#9bd0ff;
+}
+
+nav a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-6px;
+    width:0%;
+    height:2px;
+    background:#9bd0ff;
+    transition:0.3s ease;
+}
+
+nav a:hover::after{
+    width:100%;
+}
+
+/* =========================================
+   MAIN LAYOUT (FIX ALIGNMENT CENTER)
+========================================= */
+section.hero{
+    flex:1;
+
+    display:flex;
+    justify-content:center;   /* FIX: center container */
+    align-items:flex-start;
+
+    padding:40px 20px;
+}
+
+.hero-container{
+    width:100%;
+    max-width:1000px;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px; /* FIX: consistent spacing between cards */
+}
+
+/* =========================================
+   GLASS CARDS (CONSISTENT ALIGNMENT)
+========================================= */
+.card,
+.booking-card,
+.message-card{
+    width:100%; /* FIX: full alignment */
+
+    background:rgba(255,255,255,0.10);
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:20px;
+
+    padding:22px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+}
+
+/* CARD */
+.card{
+    text-align:center;
+    font-weight:600;
+}
+
+/* BOOKING CARD (FIX GRID ALIGNMENT) */
+.booking-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center; /* FIX: vertical alignment */
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.booking-card p{
+    flex:1;
+    min-width:120px;
+    margin:0;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+.btn{
+    padding:9px 18px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s ease;
+    display:inline-block;
+}
+
+/* APPROVE */
+.btn.approve{
+    background:rgba(0,255,0,0.15);
+    color:#7CFF7C;
+    border:1px solid rgba(0,255,0,0.3);
+}
+
+.btn.approve:hover{
+    background:rgba(0,255,0,0.25);
+}
+
+/* REJECT */
+.btn.reject{
+    background:rgba(255,0,0,0.12);
+    color:#ff6b6b;
+    border:1px solid rgba(255,0,0,0.3);
+}
+
+.btn.reject:hover{
+    background:rgba(255,0,0,0.22);
+}
+
+/* =========================================
+   STATUS
+========================================= */
+.status{
+    padding:4px 10px;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.status.Pending{
+    background:rgba(255,165,0,0.15);
+    color:#ffa500;
+}
+
+.status.Confirmed{
+    background:rgba(0,255,0,0.15);
+    color:#7CFF7C;
+}
+
+.status.Rejected{
+    background:rgba(255,0,0,0.15);
+    color:#ff6b6b;
+}
+
+/* =========================================
+   MESSAGE CARD
+========================================= */
+.message-card textarea{
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.15);
+
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+
+    outline:none;
+}
+
+/* =========================================
+   CLEAR BUTTON
+========================================= */
+.clear-btn{
+    padding:12px 22px;
+
+    border-radius:14px;
+    border:1px solid rgba(255,80,80,0.35);
+
+    background:rgba(255,80,80,0.12);
+    color:#fff;
+
+    font-weight:600;
+    cursor:pointer;
+
+    backdrop-filter:blur(18px);
+
+    transition:0.3s ease;
+}
+
+.clear-btn:hover{
+    transform:translateY(-3px);
+    background:rgba(255,80,80,0.25);
+}
+
+/* =========================================
+   BADGE
+========================================= */
+nav a .badge{
+    position:absolute;
+    top:-6px;
+    right:-10px;
+
+    background:#ff3b3b;
+    color:#fff;
+
+    border-radius:50%;
+    padding:2px 6px;
+
+    font-size:11px;
+}
+/* ================= BOOKING CONTAINER ================= */
+.booking-container{
+    max-height:70vh;
+    overflow-y:auto;
+    padding-right:10px;
+}
+
+/* ================= BOOKING CARD ================= */
+.booking-card{
+    padding:15px;
+    margin-bottom:12px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    color:#fff;
+}
+
+/* ================= TEXT ================= */
+.booking-card p{
+    margin:5px 0;
+}
+
+/* ================= INLINE FORMS ================= */
+.inline-form{
+    display:inline;
+}
+
+/* ================= BUTTON BASE ================= */
+.btn{
+    display:inline-block;
+    padding:7px 12px;
+    margin-right:5px;
+
+    border-radius:10px;
+    border:none;
+
+    cursor:pointer;
+    text-decoration:none;
+
+    font-size:13px;
+    font-weight:600;
+
+    transition:0.3s ease;
+    color:#fff;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.approve{
+    background:#28a745;
+}
+
+.reject{
+    background:#dc3545;
+}
+
+.finish{
+    background:#007bff;
+}
+
+.message{
+    background:rgba(255,255,255,0.2);
+}
+
+/* ================= HOVER EFFECT ================= */
+.btn:hover{
+    transform:translateY(-2px);
+    opacity:0.9;
+}
+/* =========================================
+   RESPONSIVE FIX
+========================================= */
 @media(max-width:768px){
-    header { flex-direction: column; gap:15px; }
-    .booking-card { flex-direction: column; text-align:center; }
-}
-nav a {
-    position: relative;
-    margin-right: 20px;
-}
 
-nav a .badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background: red;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
-}
-.message-card {
-    background: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 15px;
-    border:1px solid rgba(255,255,255,0.2);
-}
-.message-card textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-}
-/* ================= CLEAR ALL BOOKINGS BUTTON ================= */
-/* ================= GLASS CLEAR ALL BUTTON ================= */
-.clear-btn {
-    padding: 12px 22px;
-    border: 1px solid rgba(255, 80, 80, 0.4);
-    border-radius: 14px;
+    header{
+        flex-direction:column;
+        gap:12px;
+        text-align:center;
+    }
 
-    background: rgba(255, 80, 80, 0.12);
-    color: #fff;
+    nav{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
 
-    font-weight: 600;
-    cursor: pointer;
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    transition: 0.35s ease;
-
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-/* HOVER (glass glow effect) */
-.clear-btn:hover {
-    background: rgba(255, 80, 80, 0.25);
-    border: 1px solid rgba(255, 80, 80, 0.7);
-
-    transform: translateY(-2px) scale(1.04);
-
-    box-shadow:
-        0 10px 30px rgba(255, 0, 0, 0.25),
-        inset 0 0 10px rgba(255, 255, 255, 0.08);
-}
-
-/* ACTIVE (press effect) */
-.clear-btn:active {
-    transform: scale(0.98);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    .booking-card{
+        flex-direction:column;
+        text-align:center;
+    }
 }

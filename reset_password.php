@@ -36,4 +36,3 @@ if(isset($_GET['token'])){
 <form method="POST">
     <input type="password" name="password" placeholder="New password" required>
     <button type="submit">Reset Password</button>
-</form>

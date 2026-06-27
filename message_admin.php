@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <head>
     <meta charset="UTF-8">
     <title>Message Admin - Rewind Studio</title>
-    <link rel="stylesheet" href="booking_status.css">
+    <link rel="stylesheet" href="booking_status_v9.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /* Override/additional styles to match your design */

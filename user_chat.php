@@ -45,7 +45,7 @@ $result = $stmt->get_result();
 <html>
 <head>
 <title>Chat</title>
-<link rel="stylesheet" href="user_chats.css">
+<link rel="stylesheet" href="user_chatsv1.css">
 
 
 </head>
