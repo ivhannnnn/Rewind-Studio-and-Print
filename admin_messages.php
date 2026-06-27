@@ -18,7 +18,7 @@ if (empty($_SESSION['admin_csrf'])) {
     $_SESSION['admin_csrf'] = bin2hex(random_bytes(32));
 }
 
-/* ── Handle actions: mark read, reply, delete ─────────────────────────── */
+/* ── Handle POST actions ──────────────────────────────────────────────── */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!hash_equals($_SESSION['admin_csrf'], $_POST['csrf_token'] ?? '')) {
@@ -40,18 +40,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($action === 'reply') {
             $reply_text = trim($_POST['reply_text'] ?? '');
             if (strlen($reply_text) >= 1 && strlen($reply_text) <= 2000) {
-                $admin_id = (int) $_SESSION['admin']['id'];
+                $admin_id   = (int) $_SESSION['admin']['id'];
+                $admin_name = $_SESSION['admin']['full_name'];
                 $stmt = $conn->prepare("
-                    INSERT INTO message_replies (message_id, admin_id, reply, created_at)
-                    VALUES (?, ?, ?, NOW())
+                    INSERT INTO message_replies (message_id, admin_id, admin_name, reply, created_at)
+                    VALUES (?, ?, ?, ?, NOW())
                 ");
-                $stmt->bind_param("iis", $message_id, $admin_id, $reply_text);
+                $stmt->bind_param("iiss", $message_id, $admin_id, $admin_name, $reply_text);
                 $stmt->execute();
 
-                /* Also mark message as read when replied to */
-                $conn->prepare("UPDATE messages SET status='read' WHERE id=?")->
-                    bind_param("i", $message_id);
-                $conn->query("UPDATE messages SET status='read' WHERE id=" . $message_id);
+                /* Mark as read when replied */
+                $stmt2 = $conn->prepare("UPDATE messages SET status='read' WHERE id=?");
+                $stmt2->bind_param("i", $message_id);
+                $stmt2->execute();
             }
 
         } elseif ($action === 'delete') {
@@ -62,13 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    /* Rotate token */
     $_SESSION['admin_csrf'] = bin2hex(random_bytes(32));
     header("Location: admin_messages.php");
     exit();
 }
 
-/* ── Fetch messages with replies ──────────────────────────────────────── */
+/* ── Fetch messages ───────────────────────────────────────────────────── */
 $messages = $conn->query("
     SELECT m.*, u.full_name, u.email
     FROM   messages m
@@ -76,17 +76,19 @@ $messages = $conn->query("
     ORDER  BY m.created_at DESC
 ");
 
-/* ── Pre-fetch all replies keyed by message_id ────────────────────────── */
+/* ── Pre-fetch replies (only if table exists) ─────────────────────────── */
 $replies_map = [];
-$replies_res = $conn->query("
-    SELECT r.*, a.full_name AS admin_name
-    FROM   message_replies r
-    JOIN   users           a ON r.admin_id = a.id
-    ORDER  BY r.created_at ASC
-");
-if ($replies_res) {
-    while ($r = $replies_res->fetch_assoc()) {
-        $replies_map[(int) $r['message_id']][] = $r;
+$table_check = $conn->query("SHOW TABLES LIKE 'message_replies'");
+if ($table_check && $table_check->num_rows > 0) {
+    $replies_res = $conn->query("
+        SELECT r.*
+        FROM   message_replies r
+        ORDER  BY r.created_at ASC
+    ");
+    if ($replies_res) {
+        while ($r = $replies_res->fetch_assoc()) {
+            $replies_map[(int) $r['message_id']][] = $r;
+        }
     }
 }
 
@@ -104,7 +106,7 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages — Rewind Admin</title>
-    <link rel="stylesheet" href="admin_dashboardv2.css">
+    <link rel="stylesheet" href="admin_dashboardv3.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -198,7 +200,7 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
             <div class="message-grid">
 
             <?php while ($m = $messages->fetch_assoc()):
-                $mid      = (int) $m['id'];
+                $mid       = (int) $m['id'];
                 $is_unread = $m['status'] === 'unread';
                 $thread    = $replies_map[$mid] ?? [];
             ?>
@@ -222,9 +224,11 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
                             </div>
                         </div>
                         <span class="status <?= htmlspecialchars($m['status'], ENT_QUOTES, 'UTF-8') ?>">
-                            <?= $m['status'] === 'unread'
-                                ? '<i class="fas fa-circle-dot"></i> Unread'
-                                : '<i class="fas fa-check"></i> Read' ?>
+                            <?php if ($is_unread): ?>
+                                <i class="fas fa-circle-dot"></i> Unread
+                            <?php else: ?>
+                                <i class="fas fa-check"></i> Read
+                            <?php endif; ?>
                         </span>
                     </div>
 
@@ -264,11 +268,13 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
                         </div>
                     <?php endif; ?>
 
+                    <!-- ── Actions: one form per action, NO nesting ────── -->
+
                     <!-- Reply form -->
                     <form class="reply-form" method="POST">
-                        <input type="hidden" name="csrf_token"  value="<?= $csrf ?>">
-                        <input type="hidden" name="message_id"  value="<?= $mid ?>">
-                        <input type="hidden" name="action"      value="reply">
+                        <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                        <input type="hidden" name="message_id" value="<?= $mid ?>">
+                        <input type="hidden" name="action"     value="reply">
                         <textarea name="reply_text"
                                   placeholder="Write a reply…"
                                   rows="2"
@@ -278,27 +284,33 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
                             <button type="submit" class="btn approve btn-sm">
                                 <i class="fas fa-paper-plane" aria-hidden="true"></i> Send Reply
                             </button>
+                        </div>
+                    </form>
 
-                            <?php if ($is_unread): ?>
-                                <form method="POST" style="display:contents">
-                                    <input type="hidden" name="csrf_token"  value="<?= $csrf ?>">
-                                    <input type="hidden" name="message_id"  value="<?= $mid ?>">
-                                    <input type="hidden" name="action"      value="mark_read">
-                                    <button type="submit" class="btn verify btn-sm">
-                                        <i class="fas fa-check" aria-hidden="true"></i> Mark Read
-                                    </button>
-                                </form>
-                            <?php endif; ?>
-
-                            <form method="POST" style="display:contents"
-                                  onsubmit="return confirm('Delete this message permanently?')">
-                                <input type="hidden" name="csrf_token"  value="<?= $csrf ?>">
-                                <input type="hidden" name="message_id"  value="<?= $mid ?>">
-                                <input type="hidden" name="action"      value="delete">
-                                <button type="submit" class="btn reject btn-sm">
-                                    <i class="fas fa-trash-can" aria-hidden="true"></i> Delete
+                    <!-- Mark read form (separate) -->
+                    <?php if ($is_unread): ?>
+                        <form method="POST" class="msg-action-form">
+                            <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                            <input type="hidden" name="message_id" value="<?= $mid ?>">
+                            <input type="hidden" name="action"     value="mark_read">
+                            <div class="msg-actions">
+                                <button type="submit" class="btn verify btn-sm">
+                                    <i class="fas fa-check" aria-hidden="true"></i> Mark Read
                                 </button>
-                            </form>
+                            </div>
+                        </form>
+                    <?php endif; ?>
+
+                    <!-- Delete form (separate) -->
+                    <form method="POST" class="msg-action-form"
+                          onsubmit="return confirm('Delete this message permanently?')">
+                        <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                        <input type="hidden" name="message_id" value="<?= $mid ?>">
+                        <input type="hidden" name="action"     value="delete">
+                        <div class="msg-actions">
+                            <button type="submit" class="btn reject btn-sm">
+                                <i class="fas fa-trash-can" aria-hidden="true"></i> Delete
+                            </button>
                         </div>
                     </form>
 
@@ -320,7 +332,6 @@ $csrf       = htmlspecialchars($_SESSION['admin_csrf'], ENT_QUOTES, 'UTF-8');
 </div>
 
 <script>
-/* Mobile sidebar toggle */
 const toggle  = document.getElementById('sidebarToggle');
 const sidebar = document.getElementById('sidebar');
 toggle?.addEventListener('click', () => {
